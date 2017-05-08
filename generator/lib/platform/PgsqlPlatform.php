@@ -505,4 +505,12 @@ ALTER TABLE %s ALTER COLUMN %s;
 
         return preg_replace('/^/m', $tab, $script);
     }
+
+    /**
+     * Format timestamps with specified microsecond precision
+     */
+    public function getTimestampFormatter()
+    {
+        return 'Y-m-d H:i:s.u';
+    }
 }
