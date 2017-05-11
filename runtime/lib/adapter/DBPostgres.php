@@ -120,7 +120,7 @@ class DBPostgres extends DBAdapter
      */
     public function getTimestampFormatter()
     {
-        return "Y-m-d H:i:s O";
+        return "Y-m-d H:i:s.u O";
     }
 
     /**
