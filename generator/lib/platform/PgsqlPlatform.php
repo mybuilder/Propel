@@ -511,6 +511,6 @@ ALTER TABLE %s ALTER COLUMN %s;
      */
     public function getTimestampFormatter()
     {
-        return 'Y-m-d H:i:s.u';
+        return 'Y-m-d H:i:s.u O';
     }
 }
