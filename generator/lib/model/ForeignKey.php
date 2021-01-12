@@ -581,6 +581,24 @@ class ForeignKey extends XMLElement
     }
 
     /**
+     * Whether at least one local column is also a primary key.
+     *
+     * @return boolean True if there is at least one column that is a primary key
+     */
+    public function isAtLeastOneLocalPrimaryKey()
+    {
+        $localCols = $this->getLocalColumnObjects();
+
+        foreach ($localCols as $localCol) {
+            if ($this->getTable()->getColumn($localCol->getName())->isPrimaryKey()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Set whether this foreign key should have its creation sql generated.
      * @param boolean $v Value to assign to skipSql.
      */

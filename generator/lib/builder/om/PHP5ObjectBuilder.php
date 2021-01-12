@@ -3818,26 +3818,36 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
      *
      * @param PropelCollection \${$inputCollection} A Propel collection.
      * @param PropelPDO \$con Optional connection object
-     * @return ".$this->getObjectClassname()." The current object (for fluent API support)
+     * @return " . $this->getObjectClassname() . " The current object (for fluent API support)
      */
     public function set{$relatedName}(PropelCollection \${$inputCollection}, PropelPDO \$con = null)
     {
         \${$inputCollection}ToDelete = \$this->get{$relatedName}(new Criteria(), \$con)->diff(\${$inputCollection});
+";
 
-        \$this->{$inputCollection}ScheduledForDeletion = unserialize(serialize(\${$inputCollection}ToDelete));
+        if ($refFK->isAtLeastOneLocalPrimaryKey()) {
+            $script .= "
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        \$this->{$inputCollection}ScheduledForDeletion = clone \${$inputCollection}ToDelete;
+";
+        } else {
+            $script .= "
+        \$this->{$inputCollection}ScheduledForDeletion = \${$inputCollection}ToDelete;
+";
+        }
 
+        $script .= "
         foreach (\${$inputCollection}ToDelete as \${$inputCollectionEntry}Removed) {
             \${$inputCollectionEntry}Removed->set{$relCol}(null);
         }
-
         \$this->{$collName} = null;
         foreach (\${$inputCollection} as \${$inputCollectionEntry}) {
             \$this->add{$relatedObjectClassName}(\${$inputCollectionEntry});
         }
-
         \$this->{$collName} = \${$inputCollection};
         \$this->{$collName}Partial = false;
-
         return \$this;
     }
 ";
